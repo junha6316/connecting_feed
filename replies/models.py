@@ -13,8 +13,7 @@ def gif_directory(instance, filename):
 
 class Reply(TimeStampedModel):
 
-    """ 댓글에 대한 comment """
-    body = models.TextField()
+    body = models.TextField("내용")
     image = models.ImageField(upload_to=image_directory)
     audio = models.FileField(upload_to=audio_directory, null=True, blank=True)
     gif = models.FileField(upload_to=gif_directory, null=True, blank=True)

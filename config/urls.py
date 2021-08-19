@@ -23,6 +23,5 @@ urlpatterns = [
     path('api/v1/comments/', include('comments.urls', namespace="comments")),
     path('api/v1/replies/', include('replies.urls', namespace="replies")),
     path('api/v1/likes/', include('likes.urls', namespace="likes")),
-    path("api-auth/", include('rest_framework.urls', namespace="rest_framework")),
-    
+    path("api-auth/", include('rest_framework.urls', namespace="rest_framework")),    
 ]
