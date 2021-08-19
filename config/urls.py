@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/feeds/', include('feeds.urls', namespace="feeds")),
     path('api/v1/comments/', include('comments.urls', namespace="comments")),
-    # path('replies/', include('replies.urls'), namespace="replies"),
+    path('api/v1/replies/', include('replies.urls', namespace="replies")),
     path('api/v1/likes/', include('likes.urls', namespace="likes")),
     path("api-auth/", include('rest_framework.urls', namespace="rest_framework")),
     

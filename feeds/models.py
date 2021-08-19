@@ -10,7 +10,7 @@ def audio_directory(instance, filename):
 
 class Feed(TimeStampedModel):
 
-    body = models.TextField()
+    body = models.TextField("내용")
     audio = models.FileField(upload_to=audio_directory)
     image = models.ImageField(upload_to=image_directory)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)

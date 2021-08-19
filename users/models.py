@@ -6,7 +6,7 @@ from core.models import TimeStampedModel
 def avatar_directory(instance, filename):
     return f"users/avatar/{instance.pk}/filename"
 
-class User( AbstractUser): 
+class User(AbstractUser): 
 
     USER_REGION_CHOICES = (
         ('서울','서울'),
@@ -30,7 +30,16 @@ class User( AbstractUser):
         ('전남','전남'),
         ('제주','제주'),
     )
-    region = models.CharField(choices=USER_REGION_CHOICES, max_length=10)
+
+    USER_SEX_CHOICES = (
+        ('male', '남성'),
+        ('female','여성'),
+        ('etc', '기타'),
+    )
+    age = models.IntegerField("나이")
+    nickname = models.CharField("닉네임", max_length=30)
+    sex = models.CharField("성별", max_length=6)
+    region = models.CharField("지역", choices=USER_REGION_CHOICES, max_length=10)
     represent_avatar = models.ImageField(upload_to=avatar_directory)
     indeed_avatar = models.ImageField(upload_to=avatar_directory)
 
