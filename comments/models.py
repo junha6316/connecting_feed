@@ -13,7 +13,7 @@ def gif_directory(instance, filename):
     return f"comment/gif/{instance.pk}/{filename}"
 
 class Comment(TimeStampedModel):
-    
+
     body = models.TextField('내용')
     image = models.ImageField(upload_to=image_directory, null=True)
     audio = models.FileField(upload_to=audio_directory, null=True, blank=True)
