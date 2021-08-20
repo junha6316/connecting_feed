@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/django,macos
-# Edit at https://www.toptal.com/developers/gitignore?templates=django,macos
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,django,macos
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,django,macos
 
 ### Django ###
 *.log
@@ -179,4 +179,21 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# End of https://www.toptal.com/developers/gitignore/api/django,macos
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,django,macos
+media
