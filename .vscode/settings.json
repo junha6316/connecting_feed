@@ -1,0 +1,7 @@
+{
+    "python.pythonPath": "/Users/parkjunhada/.local/share/virtualenvs/connecting_feed-cbCNmrrI/bin/python",
+    "cornflakes.linter.executablePath": "/Users/parkjunhada/.local/share/virtualenvs/connecting_feed-cbCNmrrI/bin/flake8",
+    "python.analysis.extraPaths": [
+        "/Users/parkjunhada/.local/share/virtualenvs/connecting_feed-cbCNmrrI/lib/python3.9/site-packages/"
+    ],
+}
