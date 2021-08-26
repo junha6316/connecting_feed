@@ -6,6 +6,17 @@ name = "pypi"
 [packages]
 django = "*"
 djangorestframework = "*"
+flake8 = "*"
+django-seed = "*"
+faker = "*"
+django-debug-toolbar = "*"
+locust = "*"
+mysql-client = "*"
+mysqlclient = "*"
+django-tree-queries = "*"
+django-redis = "*"
+django-cacheops = "*"
+django-rest-swagger = "*"
 
 [dev-packages]
 
