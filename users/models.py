@@ -1,12 +1,14 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 
-from core.models import TimeStampedModel
+
 
 def avatar_directory(instance, filename):
     return f"users/avatar/{instance.pk}/filename"
 
-class User(AbstractUser): 
+
+class User(AbstractUser):
 
     USER_REGION_CHOICES = (
         ('서울', '서울'),
@@ -33,19 +35,26 @@ class User(AbstractUser):
 
     USER_SEX_CHOICES = (
         ('male', '남성'),
-        ('female','여성'),
+        ('female', '여성'),
         ('etc', '기타'),
     )
+
     age = models.IntegerField("나이")
     nickname = models.CharField("닉네임", max_length=30)
-    
     sex = models.CharField("성별", choices=USER_SEX_CHOICES, max_length=6)
     region = models.CharField("지역", choices=USER_REGION_CHOICES, max_length=10)
     represent_avatar = models.ImageField(upload_to=avatar_directory)
     indeed_avatar = models.ImageField(upload_to=avatar_directory)
     REQUIRED_FIELDS = ["age"]
 
+    def num_received_likes(self):
+        feed_likes = self.feed_likes.all().count()
+        comment_likes = self.comment_likes.values('id').count()
+        return feed_likes + comment_likes
+
+    def num_received_comments(self):
+        num_received_comments = self.comments.all().count()
+        return num_received_comments
+
     class Meta:
-        db_table = 'users'
-
-
+        db_table = "users"

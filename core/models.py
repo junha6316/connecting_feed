@@ -1,3 +1,7 @@
+import random
+
+from faker import Faker
+
 from django.db import models
 
 
@@ -23,5 +27,12 @@ def audio_directory(instance, filename):
 def gif_directory(instance, filename):
     model_name = instance._meta.model_name
     return f"media/{model_name}/gif/{filename}"
+
+
+def default_random_name():
+    faker = Faker(['ko-KR'])
+    seed_value = random.randint(1, 20000)
+    Faker.seed(seed_value)
+    return faker.bs()
 
 
