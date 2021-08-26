@@ -1,47 +1,32 @@
 
 # Connecting_feed
 
-DRF 사용해서 커넥팅 피드 API 구현
+커넥팅 피드 API 구현(Django Rest Framework)
 
-## 진행사항
-#### 2021.08.18
-
-- [X] Write ERD   
-- [X] Write models
-
-#### 3
-
-
-
-### To Do List
-
+## To Do List
 #### 1. feeds
 - [X] Create Feed
 - [X] Detail Feed
 - [X] List Feeds 
-    - [X] lastest  ?catergory=latest
-    - [X] popular  ?catergory=popular
-    - [X] myfeed   ?catergory=myfeed
+    - [X] lastest  /latest
+    - [X] popular  /popular
+    - [X] myfeed   /myfeed
+- [X] List RelatedComment /<int:pk>/comments
 
 #### 2. users
 - [X] GET my activity status /feed_status
 
 #### 3. comments
-- [ ] Create Comment 
+- [X] Create Comment 
 
-#### 4. replies
-- [ ] Create Reply 
+#### 4. likes
+- [X] Create Likes 
+    - [X] FeedLike /feed
+    - [X] CommentLike /comment
 
-#### 5. likes
-- [ ] Create Likes 
-    - [ ] feed Likes /feed
-    - [ ] comment Likes /comment
-    - [ ] reply Likes /reply
-
-- [ ] Delete Likes 
-    - [ ] feed Likes /feed
-    - [ ] comment Likes /comment
-    - [ ] reply Likes /reply
+- [X] Delete Likes 
+    - [X] FeedLike  /feed
+    - [X] CommentLike /comment
 
 
 
@@ -53,9 +38,6 @@ DRF 사용해서 커넥팅 피드 API 구현
 * password : 3y2w1a
 
 ### 데이터베이스 쿼리 최적화
-- Locust로 실험하면서 진행
-1. Eager-Loading
-2. Connection Pool
-3. Cache(Redis)
-4. Indexing
-5. http Keep alive
+- [X] Eager-Loading
+- [X] Indexing
+- [X] Cache(Redis)
