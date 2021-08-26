@@ -196,4 +196,7 @@ Temporary Items
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,django,macos
-media
+/media/*
+/static/*
+*/migrations/*
+!*/migrations/__init__.py

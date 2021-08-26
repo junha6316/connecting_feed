@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
+from .serializers import CommentSerializer
 
-# Create your views here.
+
+class CommentCreateAPIView(CreateAPIView):
+
+    serializer_class = CommentSerializer
