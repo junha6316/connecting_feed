@@ -17,6 +17,7 @@ django-tree-queries = "*"
 django-redis = "*"
 django-cacheops = "*"
 django-rest-swagger = "*"
+pre-commit = "*"
 
 [dev-packages]
 
