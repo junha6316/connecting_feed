@@ -1,8 +1,6 @@
-from inspect import Parameter
 from typing import Optional, Tuple
 
 from django.db.models import QuerySet
-from django.db.models.fields import IntegerField
 
 from comments.models import Comment
 from django.db import models
@@ -12,8 +10,8 @@ from core.models import (
     image_directory,
     audio_directory,
     gif_directory,
-    default_random_name
-    )
+    default_random_name,
+)
 
 from users.models import User
 
@@ -21,18 +19,13 @@ from users.models import User
 class Feed(TimeStampedModel):
 
     body = models.TextField("내용")
-    random_nickname = models.CharField(
-        max_length=20,
-        default=default_random_name
-        )
+    random_nickname = models.CharField(max_length=20, default=default_random_name)
     audio = models.FileField(upload_to=audio_directory, null=True)
     image = models.ImageField(upload_to=image_directory, null=True)
     gif = models.FileField(upload_to=gif_directory, null=True, default=None)
     user = models.ForeignKey(
-        "users.User",
-        related_name="feeds",
-        on_delete=models.CASCADE
-        )
+        "users.User", related_name="feeds", on_delete=models.CASCADE
+    )
     num_comments = models.IntegerField(default=0)
     num_likes = models.IntegerField(default=0)
 
@@ -53,7 +46,7 @@ class Feed(TimeStampedModel):
 
     class Meta:
         db_table = "feeds"
-        indexes =[
-            models.Index(fields=['created_at']),
-            models.Index(fields=['num_likes', 'num_comments', 'created_at'])
+        indexes = [
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["num_likes", "num_comments", "created_at"]),
         ]
