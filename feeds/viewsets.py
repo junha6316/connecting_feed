@@ -1,39 +1,39 @@
-from django.db.models import Count
+from django.db.models import Count, Prefetch
+from django.db.models.query_utils import select_related_descend
 
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
 from rest_framework.permissions import IsAuthenticated
 
+
+from users.models import User
+from comments.models import Comment
+from likes.models import FeedLike
 from .models import Feed
 from .serializers import FeedListSerializer
 
 
 class FeedViewset(viewsets.ModelViewSet):
 
-    queryset = Feed.objects.prefetch_related('feed_likes', 'comments')
+    queryset = Feed.objects.select_related('user').prefetch_related(
+        Prefetch('likes', queryset=FeedLike.objects.select_related('user'))
+    )
+
     http_method_names = [
         'get', 'post', 'put', 'patch', 'head', 'options', 'trace'
         ]
     serializer_class = FeedListSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        category = self.request.GET.get("category", None)
-
-        if category == "latest":
-            return queryset
-        elif category == "popular":
-            order_criteria = ['num_likes', 'num_comments']
-            feeds = queryset.annotate(
-                num_likes=Count("feed_likes"),
-                num_comments=Count("comments")
-                )
-            popular_feeds = feeds.order_by(*order_criteria)
-            return popular_feeds
-        elif category == "myfeed":
-            myfeeds = queryset.filter(user=self.request.user)
-            return myfeeds
-        else:
-            #명확하게 제공해야할거 같은데;
-            return queryset
+    # if action == "latest":
+    #     return queryset
+    # elif action == "popular":
+    #     order_criteria = ['num_likes', 'num_comments', 'created_at']
+    #     popular_feeds = queryset.order_by(*order_criteria).reverse()
+    #     return popular_feeds
+    # elif action == "myfeed":
+    #     myfeeds = queryset.filter(user=self.request.user)
+    #     return myfeeds
+    # else:
+    #     return queryset

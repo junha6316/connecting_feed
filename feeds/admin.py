@@ -1,7 +1,15 @@
 from django.contrib import admin
 
 from .models import Feed
-# Register your models here.
+
+
 @admin.register(Feed)
 class FeedModelAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'id',
+        'user',
+        'random_nickname',
+        'body',
+        'num_likes',
+        'num_comments',
+    )

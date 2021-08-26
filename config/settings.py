@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-eh)x6+(ob*=1tf5)_jr(t$hi6feje54u1p7ia3u&q&agv9kr&f
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+APPEND_SLASH = True
+ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost"]
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -41,13 +41,15 @@ CREATED_APPS =[
     "core.apps.CoreConfig",
     "feeds.apps.FeedsConfig",
     "comments.apps.CommentsConfig",
-    "replies.apps.RepliesConfig",
     "likes.apps.LikesConfig",
     "users.apps.UsersConfig",
 ]
 
 THIRD_PARTY_APPS = [
-    "rest_framework"
+    "rest_framework_swagger",
+    "rest_framework",
+    "debug_toolbar",
+    "cacheops"
 ]
 
 INSTALLED_APPS = DJANGO_APPS + CREATED_APPS + THIRD_PARTY_APPS
@@ -56,6 +58,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -87,10 +90,46 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+    'default' : {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django',
+        'USER': 'django',
+        'PASSWORD': '1q2w3e4r!',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    } 
+}
+
+CONN_MAX_AGE = 100
+
+#Cache
+# CASHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
+CACHEOPS_LRU = True
+CACHEOPS_DEGRADE_ON_FAILURE = True
+CACHEOPS_DEFAULTS = {
+    'timeout': 60*5,
+    'cache_on_save': True,
+    'local_get': False,
+}
+
+CACHEOPS_REDIS = "redis://127.0.0.1:6379/1"
+
+
+CACHEOPS = {
+    'feeds.Feed': {'ops': 'all', 'timeout': 60},
+    'likes.*':{'ops': 'all', 'timeout': 60},
 }
 
 
@@ -126,7 +165,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+AUTH_USER_MODEL = "users.User"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -140,15 +179,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# settings for restframework
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES" : [
+    "DEFAULT_PERMISSION_CLASSES": [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'core.pagination.FasterPageNumberPagination',
     'PAGE_SIZE': 10
 }
 
-AUTH_USER_MODEL = "users.User"
+# settings for django debug toolbar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+
