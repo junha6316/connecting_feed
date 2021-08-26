@@ -13,11 +13,10 @@ django-debug-toolbar = "*"
 locust = "*"
 mysql-client = "*"
 mysqlclient = "*"
-django-tree-queries = "*"
 django-redis = "*"
 django-cacheops = "*"
-django-rest-swagger = "*"
 pre-commit = "*"
+drf-yasg = "*"
 
 [dev-packages]
 
