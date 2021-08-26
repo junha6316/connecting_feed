@@ -45,6 +45,7 @@ class Comment(TimeStampedModel):
 
     class Meta:
         db_table = "comments"
+        ordering = ["created_at"]
         indexes = [
             models.Index(fields=["created_at"]),
         ]
@@ -64,7 +65,7 @@ class Comment(TimeStampedModel):
         return f"<Comment Object {self.pk} {self.random_nickname}>"
 
 
-@receiver(models.signals.pre_save, sender=Comment)
+@receiver(models.signals.post_delete, sender=Comment)
 def auto_count_reservation_on_update(sender, instance, **kwargs):
     if instance.id:
         feed = instance.feed
