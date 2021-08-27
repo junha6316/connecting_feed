@@ -76,7 +76,13 @@ class FeedAPITestClass(TestCase):
         response = self.client.get(path=popular_feed_list_url)
         self.assertEqual(response.status_code, 200)
 
-    def test_get_feed_commnet(self):
+    def test_get_comments_404_if_feed_is_not_existed(self):
+        self.client.login(username="test", password="123")
+        feed_comment_path = self.base_url + f"{1000000}/comments/"
+        response = self.client.get(path=feed_comment_path)
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_feed_comment(self):
         user = User.objects.first()
         feed = Feed.objects.create(user=user)
 
@@ -92,7 +98,6 @@ class FeedAPITestClass(TestCase):
         feed_comment_path = self.base_url + f"{feed.pk}/comments/"
 
         response = self.client.get(path=feed_comment_path)
-
         result_data = response.json()["results"]
         self.assertEqual(len(result_data), 2)
         self.assertEqual(len(result_data[0]["replies"]), 1)
