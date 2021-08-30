@@ -79,9 +79,8 @@ class User(AbstractUser):
     nickname = models.CharField("닉네임", max_length=30)
     sex = models.CharField("성별", choices=USER_SEX_CHOICES, max_length=6)
     region = models.CharField("지역", choices=USER_REGION_CHOICES, max_length=10)
-    represent_avatar = models.ImageField(upload_to=avatar_directory)
-    indeed_avatar = models.ImageField(upload_to=avatar_directory)
-    objects = MyModelManger()
+    represent_avatar = models.ImageField("대표 이미지", upload_to=avatar_directory)
+    indeed_avatar = models.ImageField("필수 이미지", upload_to=avatar_directory)
     REQUIRED_FIELDS = ["age"]
 
     def num_received_feed_likes(self):

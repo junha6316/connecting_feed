@@ -18,15 +18,17 @@ from users.models import User
 class Feed(TimeStampedModel):
 
     body = models.TextField("내용")
-    random_nickname = models.CharField(max_length=20, default=default_random_name)
-    audio = models.FileField(upload_to=audio_directory, null=True)
-    image = models.ImageField(upload_to=image_directory, null=True)
-    gif = models.FileField(upload_to=gif_directory, null=True, default=None)
-    user = models.ForeignKey(
-        "users.User", related_name="feeds", on_delete=models.CASCADE
+    random_nickname = models.CharField(
+        "랜덤 닉네임", max_length=20, default=default_random_name
     )
-    num_comments = models.IntegerField(default=0)
-    num_likes = models.IntegerField(default=0)
+    audio = models.FileField("오디오 파일", upload_to=audio_directory, null=True)
+    image = models.ImageField("이미지 파일", upload_to=image_directory, null=True)
+    gif = models.FileField("gif 파일", upload_to=gif_directory, null=True, default=None)
+    user = models.ForeignKey(
+        "users.User", verbose_name="작성자", related_name="feeds", on_delete=models.CASCADE
+    )
+    num_comments = models.IntegerField("댓글 수", default=0)
+    num_likes = models.IntegerField("좋아요 수", default=0)
 
     def is_engaged_by(self, user: User) -> Tuple[bool, Optional[str]]:
         if self._written_by(user):

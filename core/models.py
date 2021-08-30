@@ -7,8 +7,8 @@ from django.db import models
 
 class TimeStampedModel(models.Model):
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField("생성 일자", auto_now_add=True)
+    updated_at = models.DateTimeField("종료 일자", auto_now=True)
 
     class Meta:
         abstract = True
@@ -30,9 +30,7 @@ def gif_directory(instance, filename):
 
 
 def default_random_name():
-    faker = Faker(['ko-KR'])
+    faker = Faker(["ko-KR"])
     seed_value = random.randint(1, 20000)
     Faker.seed(seed_value)
     return faker.bs()
-
-
