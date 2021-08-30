@@ -1,6 +1,5 @@
 from django.db import models
 from django.dispatch.dispatcher import receiver
-from rest_framework.status import HTTP_409_CONFLICT
 from rest_framework.serializers import ValidationError
 
 
@@ -17,16 +16,19 @@ class Comment(TimeStampedModel):
 
     body = models.TextField("내용")
     random_nickname = models.CharField(max_length=20, default=default_random_name)
-    image = models.ImageField(upload_to=image_directory, null=True)
+    image = models.ImageField(upload_to=image_directory, null=True, blank=True)
     audio = models.FileField(upload_to=audio_directory, null=True, blank=True)
     gif = models.FileField(upload_to=gif_directory, null=True, blank=True)
     num_likes = models.IntegerField("좋아요 수", default=0)
     # feed와 comment 둘다 있으면 => comment에 달린 댓글
     # comment가 None이면 => feed에 달린 댓글
+    root = models.ForeignKey(
+        "self", related_name="replies", on_delete=models.CASCADE, null=True
+    )
     parent = models.ForeignKey(
         "self",
         verbose_name="부모 코멘트",
-        related_name="replies",
+        related_name="child_comment",
         on_delete=models.CASCADE,
         null=True,
     )
@@ -43,18 +45,36 @@ class Comment(TimeStampedModel):
         on_delete=models.CASCADE,
     )
 
+    def clean(self):
+        feed = self.cleaned_data["feed"]
+        parent = self.cleaned_data["parent"]
+        root = self.cleaned_data["root"]
+
+        if not root:  # 피드에 달린 코멘트
+            return self.cleaned_data
+        elif root.feed == feed:
+            return self.cleaned_data
+        elif parent.feed == feed:
+            return self.cleaned_data
+
+        raise ValidationError(
+            detail={"parent": "해당 부모 코멘트가 피드에 포함되어있지 않습니다."}, code=409
+        )
+
     class Meta:
         db_table = "comments"
         ordering = ["created_at"]
         indexes = [
             models.Index(fields=["created_at"]),
+            models.Index(fields=["feed", "parent"]),
         ]
 
-    def clean(self):
-        if self.parent_comment.feed != self.feed:
-            raise ValidationError(
-                detail={"parent": "해당 부모 코멘트가 피드에 포함되어있지 않습니다."}, code=HTTP_409_CONFLICT
-            )
+    def save(self, *args, **kwargs):
+        feed, user = self.feed, self.user
+        is_engaged, pre_random_name = feed.is_engaged_by(user)
+        if is_engaged:
+            self.random_nickname = pre_random_name
+        super().save(*args, **kwargs)
 
     def to_user(self):
         if self.parent:

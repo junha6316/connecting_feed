@@ -87,10 +87,12 @@ class FeedAPITestClass(TestCase):
         feed = Feed.objects.create(user=user)
 
         # Create Comment
-        comment1 = Comment.objects.create(feed=feed, user=user)  # 피드에 달린 comment
-        Comment.objects.create(feed=feed, user=user)
+        comment1 = Comment.objects.create(
+            feed=feed, root=None, user=user
+        )  # 피드에 달린 comment
+        Comment.objects.create(feed=feed, root=None, user=user)
         Comment.objects.create(
-            feed=feed, parent=comment1, user=user
+            feed=feed, root=comment1, parent=comment1, user=user
         )  # comment에 달린 comment
 
         # login
@@ -99,5 +101,13 @@ class FeedAPITestClass(TestCase):
 
         response = self.client.get(path=feed_comment_path)
         result_data = response.json()["results"]
+
         self.assertEqual(len(result_data), 2)
         self.assertEqual(len(result_data[0]["replies"]), 1)
+
+    def test_get_related_comments(self):
+        user = User.objects.first()
+        feed = Feed.objects.create(user=user)
+
+        self.client.login(feed=feed, user=user)
+        # comments_path = self.base_url + f"{feed.pk}/comments"
