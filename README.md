@@ -3,6 +3,13 @@
 
 커넥팅 피드 API 구현(Django Rest Framework)
 
+## Stack
+- Python 3.9.6
+- Django 3.2.6
+- DRF 3.12.4
+- mysql 8.0.26
+
+
 ## To Do List
 #### 1. feeds
 - [X] Create Feed
@@ -27,8 +34,6 @@
 - [X] Delete Likes 
     - [X] FeedLike  /feed
     - [X] CommentLike /comment
-
-
 
 ## Database 관련
 
