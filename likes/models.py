@@ -4,6 +4,7 @@ from django.db.models.constraints import UniqueConstraint
 from core.models import TimeStampedModel
 
 
+# 서비스에 따라 다름 m2m, f2f
 class CommentLike(TimeStampedModel):
 
     comment = models.ForeignKey(
@@ -29,7 +30,10 @@ class CommentLike(TimeStampedModel):
 class FeedLike(TimeStampedModel):
 
     feed = models.ForeignKey(
-        "feeds.Feed", on_delete=models.CASCADE, related_name="likes"
+        "feeds.Feed",
+        verbose_name="피드",
+        related_name="likes",
+        on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
         "users.User",
@@ -45,6 +49,7 @@ class FeedLike(TimeStampedModel):
         ]
 
 
+# 커스텀 시그널 만들어서 사용하는 것도 좋은 방법, 이런식으로 정의하는건 지양
 # CommentLike가 삭제될때 해당 피드 num_likes - 1
 @receiver(models.signals.post_delete, sender=CommentLike)
 def auto_count_commentLike_on_delete(sender, instance, **kwargs):

@@ -15,15 +15,23 @@ from core.models import (
 class Comment(TimeStampedModel):
 
     body = models.TextField("내용")
-    random_nickname = models.CharField(max_length=20, default=default_random_name)
-    image = models.ImageField(upload_to=image_directory, null=True, blank=True)
-    audio = models.FileField(upload_to=audio_directory, null=True, blank=True)
-    gif = models.FileField(upload_to=gif_directory, null=True, blank=True)
+    random_nickname = models.CharField(
+        "랜덤 닉네임", max_length=20, default=default_random_name
+    )
+    image = models.ImageField(
+        "이미지 파일", upload_to=image_directory, null=True, blank=True
+    )
+    audio = models.FileField("오디오 파일", upload_to=audio_directory, null=True, blank=True)
+    gif = models.FileField("gif 파일", upload_to=gif_directory, null=True, blank=True)
     num_likes = models.IntegerField("좋아요 수", default=0)
     # feed와 comment 둘다 있으면 => comment에 달린 댓글
     # comment가 None이면 => feed에 달린 댓글
     root = models.ForeignKey(
-        "self", related_name="replies", on_delete=models.CASCADE, null=True
+        "self",
+        related_name="replies",
+        verbose_name="루트 코멘트",
+        on_delete=models.CASCADE,
+        null=True,
     )
     parent = models.ForeignKey(
         "self",
@@ -61,14 +69,6 @@ class Comment(TimeStampedModel):
             detail={"parent": "해당 부모 코멘트가 피드에 포함되어있지 않습니다."}, code=409
         )
 
-    class Meta:
-        db_table = "comments"
-        ordering = ["created_at"]
-        indexes = [
-            models.Index(fields=["created_at"]),
-            models.Index(fields=["feed", "parent"]),
-        ]
-
     def save(self, *args, **kwargs):
         feed, user = self.feed, self.user
         is_engaged, pre_random_name = feed.is_engaged_by(user)
@@ -83,6 +83,14 @@ class Comment(TimeStampedModel):
 
     def __str__(self):
         return f"<Comment Object {self.pk} {self.random_nickname}>"
+
+    class Meta:
+        db_table = "comments"
+        ordering = ["created_at"]
+        indexes = [
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["feed", "parent"]),
+        ]
 
 
 @receiver(models.signals.post_delete, sender=Comment)
