@@ -7,6 +7,7 @@ from .views import (
     CommentListAPIView,
     LatestFeedListView,
     MyFeedListView,
+    MyFeedStatusView,
     PopularFeedListView,
 )
 
@@ -22,4 +23,5 @@ urlpatterns = [
     path("popular/", PopularFeedListView.as_view(), name="popular"),
     path("myfeed/", MyFeedListView.as_view(), name="myfeed"),
     path("<int:pk>/comments/", CommentListAPIView.as_view(), name="comments"),
+    path("my-feed-status/", MyFeedStatusView.as_view(), name="my-feed-status"),
 ] + router.urls

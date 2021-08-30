@@ -2,7 +2,11 @@ from django.db.models import Prefetch
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
 from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
 
 from comments.models import Comment
 from comments.serializers import CommentSerializer
@@ -41,6 +45,7 @@ class BaseFeedListView(ListAPIView):
 
     queryset = Feed.objects.select_related("user").prefetch_related("likes__user")
     serializer_class = BaseFeedSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class PopularFeedListView(BaseFeedListView):
@@ -68,3 +73,21 @@ class MyFeedListView(BaseFeedListView):
         queryset = super().get_queryset()
         user = self.request.user
         return queryset.filter(user=user).cache()
+
+
+class MyFeedStatusView(APIView):
+
+    premission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        data = {
+            "num_my_feeds": user.feeds.all().cache().count(),
+            "num_my_likes": user.num_received_comments(),
+            "num_my_reply": user.num_received_feed_likes(),
+        }
+
+        return Response(
+            data=data,
+            status=HTTP_200_OK,
+        )
