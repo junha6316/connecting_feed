@@ -1,12 +1,13 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from rest_framework.fields import SerializerMethodField
 
 from users.serializers import RelatedUserSerializer
 from core.models import default_random_name
+
 from .models import Feed
 
 
-class BaseFeedSerializer(serializers.ModelSerializer):
+class BaseFeedSerializer(ModelSerializer):
 
     user = RelatedUserSerializer(read_only=True)
     is_like = SerializerMethodField(read_only=True)
