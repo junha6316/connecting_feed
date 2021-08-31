@@ -17,6 +17,9 @@ django-redis = "*"
 django-cacheops = "*"
 pre-commit = "*"
 drf-yasg = "*"
+jwt = "*"
+pyjwt = "*"
+django-dotenv = "*"
 
 [dev-packages]
 

@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 def avatar_directory(instance, filename):
-    return f"users/avatar/{instance.pk}/filename"
+    return f"users/avatar/{instance.pk}/{filename}"
 
 
 class MyModelManger(models.Manager):
@@ -81,6 +81,7 @@ class User(AbstractUser):
     region = models.CharField("지역", choices=USER_REGION_CHOICES, max_length=10)
     represent_avatar = models.ImageField("대표 이미지", upload_to=avatar_directory)
     indeed_avatar = models.ImageField("필수 이미지", upload_to=avatar_directory)
+    refresh_token = models.CharField("갱신 토큰", max_length=255, default="")
     REQUIRED_FIELDS = ["age"]
 
     def num_received_feed_likes(self):

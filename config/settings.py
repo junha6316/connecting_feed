@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-eh)x6+(ob*=1tf5)_jr(t$hi6feje54u1p7ia3u&q&agv9kr&f"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -48,6 +48,13 @@ CREATED_APPS = [
 THIRD_PARTY_APPS = ["rest_framework", "debug_toolbar", "cacheops", "drf_yasg"]
 
 INSTALLED_APPS = DJANGO_APPS + CREATED_APPS + THIRD_PARTY_APPS
+
+"""
+금융권 암호화 로직
+request에 바인딩
+보안
+모든 요청에 적용되는 로직이면 커스텀 미들웨어 작성
+"""
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -119,12 +126,14 @@ CACHEOPS_DEFAULTS = {
     "local_get": False,
 }
 
-CACHEOPS_REDIS = "redis://127.0.0.1:6379/1"
+CACHEOPS_REDIS = "redis://127.0.0.1:6379/"
 
 
 CACHEOPS = {
-    "feeds.Feed": {"ops": "all", "timeout": 60},
-    "likes.*": {"ops": "all", "timeout": 60},
+    "comments.Comment": {"ops": "just_enable", "time_out": 60},
+    "feeds.Feed": {"ops": "just_enable", "time_out": 60},
+    "likes.*": {"ops": "just_enable", "time_out": 60},
+    "users.User": {"ops": "just_enable", "time_out": 60},
 }
 
 
@@ -152,7 +161,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-
 USE_I18N = True
 
 USE_L10N = True
@@ -177,14 +185,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # settings for restframework
 REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "core.pagination.FasterPageNumberPagination",
+    "PAGE_SIZE": 20,
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-    ]
-}
-
-REST_FRAMEWORK = {
-    "DEFAULT_PAGINATION_CLASS": "core.pagination.FasterPageNumberPagination",
-    "PAGE_SIZE": 10,
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "config.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
 }
 
 # settings for django debug toolbar
