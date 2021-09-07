@@ -36,8 +36,9 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=[IsAuthenticated],
 )
+
+# versioning은 앱마다 하고 있음
 urlpatterns = [
-    # path('swagger/', schema_view),
     path("admin/", admin.site.urls),
     path("api/v1/feeds/", include("feeds.urls", namespace="feeds")),
     path("api/v1/comments/", include("comments.urls", namespace="comments")),
